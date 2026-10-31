@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NOT DAN TANDA REHAT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Music&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;}
+
+  :root{
+    --bg1:#f5efe3;
+    --bg2:#faf6ef;
+    --paper:#fdfaf4;
+    --ink:#4a3728;
+    --brown:#6b4e3d;
+    --brown-deep:#5c4033;
+    --terracotta:#b5654a;
+    --terracotta-deep:#a85844;
+    --olive:#7a8b5a;
+    --olive-deep:#5c6b42;
+    --mustard:#c9a227;
+    --mustard-deep:#8b6914;
+    --sand:#ece3d6;
+    --border:#e0d3c2;
+    --muted:#a89880;
+  }
+
+  body{
+    margin:0;padding:26px 16px 38px;
+    min-height:100vh;
+    font-family:"Segoe UI",Arial,sans-serif;
+    color:var(--ink);
+    background:
+      radial-gradient(circle at 15% 8%, #fdf6ea 0%, transparent 45%),
+      radial-gradient(circle at 88% 92%, #efe4d3 0%, transparent 50%),
+      linear-gradient(160deg, var(--bg1) 0%, var(--bg2) 55%, #f1e8da 100%);
+  }
+  .wrap{max-width:960px;margin:auto;}
+
+  h1{
+    text-align:center;margin:0 0 6px;
+    font-size:30px;color:var(--brown-deep);
+    letter-spacing:1.6px;font-weight:800;
+  }
+  .title-dots{
+    display:flex;justify-content:center;gap:8px;margin:0 0 6px;
+  }
+  .title-dots span{
+    width:9px;height:9px;border-radius:50%;
+  }
+  .title-dots span:nth-child(1){background:var(--brown);}
+  .title-dots span:nth-child(2){background:var(--terracotta);}
+  .title-dots span:nth-child(3){background:var(--olive);}
+  .title-dots span:nth-child(4){background:var(--mustard);}
+
+  .sub{
+    text-align:center;color:#8a7a66;font-size:13.5px;
+    margin:0 0 24px;letter-spacing:.3px;
+  }
+
+  /* ---------------- TABLE ---------------- */
+  .table{
+    background:var(--paper);
+    border-radius:20px;
+    box-shadow:0 10px 30px rgba(92,64,51,.13);
+    overflow:hidden;
+    border:1px solid var(--border);
+  }
+
+  .thead{
+    display:grid;
+    grid-template-columns:1.15fr 1fr 1fr 0.85fr;
+    color:#f7efe2;
+    font-size:12px;
+    font-weight:800;
+    letter-spacing:.7px;
+    text-transform:uppercase;
+  }
+  .thead > div{padding:14px 10px;text-align:center;}
+  .thead > div:nth-child(1){background:var(--brown-deep);}
+  .thead > div:nth-child(2){background:#7a5a45;}
+  .thead > div:nth-child(3){background:var(--terracotta-deep);}
+  .thead > div:nth-child(4){background:var(--olive-deep);}
+
+  .row{
+    display:grid;
+    grid-template-columns:1.15fr 1fr 1fr 0.85fr;
+    border-top:1px solid #f0e8db;
+    align-items:center;
+    position:relative;
+    transition:background .2s;
+  }
+  .row:hover{background:#fbf6ec;}
+
+  .row::before{
+    content:"";position:absolute;
+    left:0;top:0;bottom:0;width:5px;
+  }
+  .row:nth-child(1)::before{background:var(--brown);}
+  .row:nth-child(2)::before{background:var(--terracotta);}
+  .row:nth-child(3)::before{background:var(--olive);}
+  .row:nth-child(4)::before{background:var(--mustard);}
+
+  .cell{padding:14px 10px;text-align:center;}
+
+  .cell.name{
+    font-size:16px;font-weight:800;
+    letter-spacing:.3px;
+    padding-left:18px;
+  }
+  .row:nth-child(1) .cell.name{color:var(--brown-deep);}
+  .row:nth-child(2) .cell.name{color:var(--terracotta-deep);}
+  .row:nth-child(3) .cell.name{color:var(--olive-deep);}
+  .row:nth-child(4) .cell.name{color:var(--mustard-deep);}
+
+  .cell.value{
+    font-size:15px;font-weight:800;
+    color:var(--olive-deep);
+    letter-spacing:.3px;
+  }
+
+  /* ---------------- SYMBOL CELL ---------------- */
+  .sym-cell{
+    cursor:pointer;
+    border-radius:14px;
+    padding:10px 6px;
+    margin:6px 4px;
+    transition:all .2s ease;
+    border:2px solid transparent;
+    background:#fbf7ef;
+  }
+  .sym-cell:hover{
+    border-color:#dcc7a6;
+    background:#f8f1e2;
+  }
+  .sym-cell.active{
+    border-color:var(--mustard);
+    background:#fdf6df;
+  }
+
+  .sym-cell.rest{background:#fbf1ec;}
+  .sym-cell.rest:hover{
+    border-color:#e2b7a6;
+    background:#f9ece4;
+  }
+  .sym-cell.rest.active{
+    border-color:var(--terracotta);
+    background:#faece3;
+  }
+
+  .symbol{
+    font-family:'Noto Music','Segoe UI Symbol',serif;
+    font-size:58px;
+    line-height:1;
+    height:72px;
+    display:flex;align-items:center;justify-content:center;
+    color:var(--brown-deep);
+    transition:color .2s;
+    letter-spacing:-0.05em;
+  }
+  .sym-cell.rest .symbol{color:var(--terracotta-deep);}
+  .sym-cell.active .symbol{color:var(--mustard-deep);}
+  .sym-cell.rest.active .symbol{color:var(--terracotta-deep);}
+
+  .sym-label{
+    font-size:10px;
+    font-weight:800;
+    letter-spacing:1.2px;
+    color:#b6a48d;
+    text-transform:uppercase;
+    margin-top:2px;
+    transition:color .2s;
+  }
+  .sym-cell:hover .sym-label{color:var(--mustard-deep);}
+  .sym-cell.rest:hover .sym-label{color:var(--terracotta-deep);}
+
+  /* ---------------- BEATS ---------------- */
+  .beats{
+    display:flex;gap:5px;justify-content:center;
+    min-height:24px;margin-top:8px;
+  }
+  .dot{
+    width:24px;height:24px;border-radius:50%;
+    background:var(--sand);
+    display:flex;align-items:center;justify-content:center;
+    font-size:11px;font-weight:800;color:#b3a390;
+    transition:all .1s ease;
+  }
+  .dot.small{width:22px;height:22px;font-size:9.5px;}
+  .dot.on{
+    background:var(--mustard);
+    color:#fff;
+    transform:scale(1.15);
+    box-shadow:0 0 10px rgba(201,162,39,.55);
+  }
+  .sym-cell.rest .dot.on{
+    background:var(--terracotta);
+    box-shadow:0 0 10px rgba(181,101,74,.55);
+  }
+
+  /* ---------------- TIPS ---------------- */
+  .tips{
+    display:grid;grid-template-columns:1fr 1fr;gap:14px;
+    margin-top:20px;
+  }
+  @media(max-width:600px){ .tips{grid-template-columns:1fr;} }
+
+  .tip{
+    background:#f8f2e4;
+    border-left:4px solid var(--mustard);
+    padding:13px 16px;border-radius:10px;
+    font-size:13px;line-height:1.65;color:#6b521e;
+  }
+  .tip b{color:var(--mustard-deep);}
+
+  .tip.rest{
+    background:#f9ece4;
+    border-left-color:var(--terracotta);
+    color:#7a4030;
+  }
+  .tip.rest b{color:var(--terracotta-deep);}
+
+  .footline{
+    text-align:center;font-size:12.5px;color:var(--muted);
+    margin-top:20px;line-height:1.8;
+  }
+
+  /* ---------------- MOBILE ---------------- */
+  @media(max-width:700px){
+    h1{font-size:22px;letter-spacing:1px;}
+    .thead{display:none;}
+    .row{
+      grid-template-columns:1fr 1fr;
+      gap:0;
+      padding:8px 4px 8px 14px;
+    }
+    .cell{padding:6px 6px;}
+    .cell.name{
+      grid-column:1;
+      text-align:left;
+      padding-left:8px;
+      font-size:15px;
+    }
+    .cell.value{
+      grid-column:2;
+      text-align:right;
+      padding-right:14px;
+      font-size:14px;
+    }
+    .sym-cell{
+      grid-column:auto;
+      padding:8px 4px;
+      margin:4px 4px;
+    }
+    .sym-cell:nth-of-type(2){grid-column:1;}
+    .sym-cell:nth-of-type(3){grid-column:2;}
+    .symbol{font-size:48px;height:60px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>NOT DAN TANDA REHAT</h1>
+  <div class="title-dots">
+    <span></span><span></span><span></span><span></span>
+  </div>
+  <p class="sub">Klik setiap simbol untuk mendengar dan mengira detik.</p>
+
+  <div class="table">
+    <div class="thead">
+      <div>Nama not</div>
+      <div>Simbol not</div>
+      <div>Tanda rehat yang sepadan</div>
+      <div>Nilai</div>
+    </div>
+    <div id="rows"></div>
+  </div>
+
+  <div class="tips">
+    <div class="tip">
+      <b>Not</b> = satu bunyi berterusan sepanjang nilai detiknya.
+      Klik simbol not untuk mendengar bunyi dan melihat kiraan.
+    </div>
+    <div class="tip rest">
+      <b>Tanda rehat</b> = teruskan kiraan tanpa bunyi.
+      Klik simbol rehat untuk melihat kiraan dalam keadaan senyap.
+    </div>
+  </div>
+
+  <p class="footline">
+    Dua not kuaver bersamaan dengan satu detik.<br>
+    Dengar tempoh bunyi dan perhatikan kiraan.
+  </p>
+
+</div>
+
+<script>
+/* ============================================================
+   FONT PRELOAD
+   ============================================================ */
+if(document.fonts && document.fonts.load){
+  document.fonts.load('16px "Noto Music"').catch(()=>{});
+}
+
+/* ============================================================
+   DATA
+   ============================================================ */
+const ROWS = [
+  { name:'Semibrif', note:'\u{1D15D}', rest:'\u{1D13B}', beats:4, val:'4 detik' },
+  { name:'Minim',    note:'\u{1D15E}', rest:'\u{1D13C}', beats:2, val:'2 detik' },
+  { name:'Krocet',   note:'\u{1D15F}', rest:'\u{1D13D}', beats:1, val:'1 detik' },
+  { name:'Kuaver',   note:'\u{1D160}\u{1D160}', rest:'\u{1D13E}', beats:1, val:'½ detik', kuaver:true }
+];
+
+/* ============================================================
+   AUDIO
+   ============================================================ */
+let ac = null;
+let sessionGain = null;
+let activeRAF = null;
+let activeCell = null;
+
+function ensureAudio(){
+  if(!ac) ac = new (window.AudioContext || window.webkitAudioContext)();
+  if(ac.state === 'suspended') ac.resume();
+}
+
+function startSession(){
+  if(sessionGain){ try{ sessionGain.disconnect(); }catch(e){} }
+  sessionGain = ac.createGain();
+  sessionGain.gain.value = 1;
+  sessionGain.connect(ac.destination);
+}
+
+function stopSession(){
+  if(activeRAF){ cancelAnimationFrame(activeRAF); activeRAF = null; }
+  if(sessionGain){
+    const g = sessionGain;
+    const now = ac.currentTime;
+    try{
+      g.gain.cancelScheduledValues(now);
+      g.gain.setValueAtTime(g.gain.value, now);
+      g.gain.linearRampToValueAtTime(0, now + 0.15);
+    }catch(e){}
+    setTimeout(() => { try{ g.disconnect(); }catch(e){} }, 300);
+    sessionGain = null;
+  }
+  if(activeCell){
+    activeCell.classList.remove('active');
+    activeCell.querySelectorAll('.dot').forEach(d => d.classList.remove('on'));
+    activeCell = null;
+  }
+}
+
+function playClick(t, strong){
+  const osc = ac.createOscillator();
+  const g = ac.createGain();
+  osc.type = 'sine';
+  osc.frequency.setValueAtTime(strong ? 620 : 480, t);
+  g.gain.setValueAtTime(0, t);
+  g.gain.linearRampToValueAtTime(strong ? 0.035 : 0.022, t + 0.008);
+  g.gain.linearRampToValueAtTime(0, t + 0.06);
+  osc.connect(g).connect(sessionGain);
+  osc.start(t);
+  osc.stop(t + 0.08);
+}
+
+function playSoftVowel(t, dur, pitch, vol){
+  if(dur <= 0.05) return;
+
+  const osc1 = ac.createOscillator();
+  osc1.type = 'sine';
+  osc1.frequency.setValueAtTime(pitch, t);
+
+  const osc2 = ac.createOscillator();
+  osc2.type = 'sine';
+  osc2.frequency.setValueAtTime(pitch * 2, t);
+
+  const osc3 = ac.createOscillator();
+  osc3.type = 'sine';
+  osc3.frequency.setValueAtTime(pitch * 3, t);
+
+  const lfo = ac.createOscillator();
+  lfo.type = 'sine';
+  lfo.frequency.setValueAtTime(4.5, t);
+  const lfoGain = ac.createGain();
+  lfoGain.gain.setValueAtTime(pitch * 0.006, t);
+  lfo.connect(lfoGain);
+  lfoGain.connect(osc1.frequency);
+  lfoGain.connect(osc2.frequency);
+  lfoGain.connect(osc3.frequency);
+
+  const g1 = ac.createGain(); g1.gain.value = 1.00;
+  const g2 = ac.createGain(); g2.gain.value = 0.22;
+  const g3 = ac.createGain(); g3.gain.value = 0.07;
+
+  const lp = ac.createBiquadFilter();
+  lp.type = 'lowpass';
+  lp.frequency.setValueAtTime(1600, t);
+  lp.Q.setValueAtTime(0.7, t);
+
+  const env = ac.createGain();
+  const attack  = Math.min(0.14, dur * 0.30);
+  const release = Math.min(0.30, dur * 0.40);
+
+  env.gain.setValueAtTime(0, t);
+  env.gain.linearRampToValueAtTime(vol, t + attack);
+  env.gain.setValueAtTime(vol, t + Math.max(attack, dur - release));
+  env.gain.linearRampToValueAtTime(0, t + dur);
+
+  osc1.connect(g1).connect(lp);
+  osc2.connect(g2).connect(lp);
+  osc3.connect(g3).connect(lp);
+  lp.connect(env).connect(sessionGain);
+
+  osc1.start(t); osc1.stop(t + dur + 0.15);
+  osc2.start(t); osc2.stop(t + dur + 0.15);
+  osc3.start(t); osc3.stop(t + dur + 0.15);
+  lfo.start(t);  lfo.stop(t + dur + 0.15);
+}
+
+/* ============================================================
+   BINA BARIS
+   ============================================================ */
+const rowsEl = document.getElementById('rows');
+const BEAT = 1.0;
+
+ROWS.forEach(r => {
+  const row = document.createElement('div');
+  row.className = 'row';
+
+  const nameCell = document.createElement('div');
+  nameCell.className = 'cell name';
+  nameCell.textContent = r.name;
+
+  const noteCell = document.createElement('div');
+  noteCell.className = 'sym-cell';
+  noteCell.innerHTML = `
+    <div class="symbol">${r.note}</div>
+    <div class="sym-label">klik not</div>
+    <div class="beats"></div>
+  `;
+  noteCell.addEventListener('click', () => trigger(noteCell, r, false));
+
+  const restCell = document.createElement('div');
+  restCell.className = 'sym-cell rest';
+  restCell.innerHTML = `
+    <div class="symbol">${r.rest}</div>
+    <div class="sym-label">klik rehat</div>
+    <div class="beats"></div>
+  `;
+  restCell.addEventListener('click', () => trigger(restCell, r, true));
+
+  const valCell = document.createElement('div');
+  valCell.className = 'cell value';
+  valCell.textContent = r.val;
+
+  row.appendChild(nameCell);
+  row.appendChild(noteCell);
+  row.appendChild(restCell);
+  row.appendChild(valCell);
+  rowsEl.appendChild(row);
+});
+
+/* ============================================================
+   TRIGGER
+   ============================================================ */
+function trigger(cell, data, isRest){
+  if(cell.classList.contains('active')) return;
+
+  ensureAudio();
+  stopSession();
+  startSession();
+
+  cell.classList.add('active');
+  activeCell = cell;
+
+  const beatsEl = cell.querySelector('.beats');
+  beatsEl.innerHTML = '';
+  const dots = [];
+
+  if(data.kuaver){
+    const d1 = document.createElement('div');
+    d1.className = 'dot';
+    d1.textContent = '1';
+    beatsEl.appendChild(d1);
+    dots.push({ el:d1, t:0, dur:BEAT/2 });
+
+    const d2 = document.createElement('div');
+    d2.className = 'dot small';
+    d2.textContent = 'dan';
+    beatsEl.appendChild(d2);
+    dots.push({ el:d2, t:BEAT/2, dur:BEAT/2 });
+  } else {
+    for(let i = 0; i < data.beats; i++){
+      const d = document.createElement('div');
+      d.className = 'dot';
+      d.textContent = i + 1;
+      beatsEl.appendChild(d);
+      dots.push({ el:d, t:i*BEAT, dur:BEAT });
+    }
+  }
+
+  const t0 = ac.currentTime + 0.12;
+  const totalDur = data.kuaver ? BEAT : data.beats * BEAT;
+
+  if(data.kuaver){
+    playClick(t0, true);
+    playClick(t0 + BEAT/2, false);
+  } else {
+    for(let i = 0; i < data.beats; i++){
+      playClick(t0 + i*BEAT, i === 0);
+    }
+  }
+
+  if(!isRest){
+    if(data.kuaver){
+      playSoftVowel(t0 + 0.02, 0.30, 392, 0.30);
+      playSoftVowel(t0 + BEAT/2 + 0.02, 0.30, 392, 0.30);
+    } else {
+      playSoftVowel(t0 + 0.02, totalDur - 0.12, 330, 0.32);
+    }
+  }
+
+  const startWall = performance.now() + 120;
+
+  function loop(){
+    const elapsed = (performance.now() - startWall) / 1000;
+
+    if(elapsed > totalDur + 0.3){
+      cell.classList.remove('active');
+      dots.forEach(d => d.el.classList.remove('on'));
+      if(activeCell === cell) activeCell = null;
+      activeRAF = null;
+      return;
+    }
+
+    dots.forEach(d => {
+      const on = elapsed >= d.t && elapsed < d.t + d.dur;
+      d.el.classList.toggle('on', on);
+    });
+
+    activeRAF = requestAnimationFrame(loop);
+  }
+  activeRAF = requestAnimationFrame(loop);
+}
+</script>
+</body>
+</html>
